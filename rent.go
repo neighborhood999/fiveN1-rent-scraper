@@ -49,7 +49,8 @@ type Record struct {
 }
 
 var (
-	rootURL = "https://rent.591.com.tw/"
+	rootURL  = "https://rent.591.com.tw/"
+	rentList []*RentHouseInfo
 )
 
 // NewRentHouseInfo creates a new rent house information.
@@ -138,14 +139,12 @@ func exportJSON(b []byte) {
 	fmt.Println("🎈 Done！Check out `/tmp/rent.json`.")
 }
 
-func scrape(url string) ([]*RentHouseInfo, *Record) {
+func scrapeRentHouse(url string) []*RentHouseInfo {
 	// testURL := "https://rent.591.com.tw/?kind=2&region=1&rentprice=2&hasimg=1&not_cover=1&role=1&order=posttime&orderType=desc"
 	doc, err := goquery.NewDocument(url)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	rentList := make([]*RentHouseInfo, 30)
 
 	doc.Find("#content").Each(func(_ int, selector *goquery.Selection) {
 		selector.Find(".listInfo.clearfix").Each(func(item int, listInfo *goquery.Selection) {
@@ -200,9 +199,18 @@ func scrape(url string) ([]*RentHouseInfo, *Record) {
 			})
 
 			// Add rent house into list
-			rentList[item] = rentHouse
+			rentList = append(rentList, rentHouse)
 		})
 	})
+
+	return rentList
+}
+
+func scrapeRecordsNum(url string) *Record {
+	doc, err := goquery.NewDocument(url)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	r := NewRecord()
 	doc.Find(".page-limit > .pageBar > .TotalRecord > .R").Each(func(_ int, selector *goquery.Selection) {
@@ -211,7 +219,7 @@ func scrape(url string) ([]*RentHouseInfo, *Record) {
 		r.pages = (totalRecord / 30) + 1
 	})
 
-	return rentList, r
+	return r
 }
 
 func main() {
@@ -222,5 +230,8 @@ func main() {
 	}
 
 	fmt.Println(url)
-	// scrape(url)
+	// r := scrapeRecordsNum(url)
+	// fmt.Println(r)
+	// l := scrapeRentHouse(url)
+	// fmt.Println(l)
 }
