@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
@@ -41,8 +42,14 @@ type Options struct {
 	Role      int    `url:"role"`      // 過濾是否為「屋主刊登」 - `0`：否、`1`：是
 }
 
+// Record is the representation records and pages.
+type Record struct {
+	records int
+	pages   int
+}
+
 var (
-	url = "https://rent.591.com.tw/"
+	rootURL = "https://rent.591.com.tw/"
 )
 
 // NewRentHouseInfo creates a new rent house information.
@@ -63,6 +70,11 @@ func NewOptions() *Options {
 		Order:     "posttime",
 		OrderType: "desc",
 	}
+}
+
+// NewRecord creates a record.
+func NewRecord() *Record {
+	return &Record{}
 }
 
 func isBooleanNum(field string, n int) error {
@@ -87,7 +99,7 @@ func generateURL(o Options) (string, error) {
 
 	v, _ := query.Values(o)
 
-	return url + "?" + v.Encode(), nil
+	return rootURL + "?" + v.Encode(), nil
 }
 
 func stringReplacer(text string) string {
@@ -126,7 +138,7 @@ func exportJSON(b []byte) {
 	fmt.Println("🎈 Done！Check out `/tmp/rent.json`.")
 }
 
-func scrape(url string) {
+func scrape(url string) ([]*RentHouseInfo, *Record) {
 	// testURL := "https://rent.591.com.tw/?kind=2&region=1&rentprice=2&hasimg=1&not_cover=1&role=1&order=posttime&orderType=desc"
 	doc, err := goquery.NewDocument(url)
 	if err != nil {
@@ -191,6 +203,15 @@ func scrape(url string) {
 			rentList[item] = rentHouse
 		})
 	})
+
+	r := NewRecord()
+	doc.Find(".page-limit > .pageBar > .TotalRecord > .R").Each(func(_ int, selector *goquery.Selection) {
+		totalRecord, _ := strconv.Atoi(stringReplacer(selector.Text()))
+		r.records = totalRecord
+		r.pages = (totalRecord / 30) + 1
+	})
+
+	return rentList, r
 }
 
 func main() {
