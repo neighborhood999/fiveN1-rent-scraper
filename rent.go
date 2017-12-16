@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"strconv"
 	"strings"
@@ -42,11 +43,16 @@ type Options struct {
 	Role      int    `url:"role"`      // 過濾是否為「屋主刊登」 - `0`：否、`1`：是
 }
 
+// Response is the representation http.Response.
+type Response *http.Response
+
 // FiveN1 is the representation page information.
 type FiveN1 struct {
 	records  int
 	pages    int
 	queryURL string
+	client   *http.Client
+	cookie   *http.Cookie
 }
 
 var (
@@ -76,7 +82,34 @@ func NewOptions() *Options {
 
 // NewFiveN1 creates a FiveN1.
 func NewFiveN1() *FiveN1 {
-	return &FiveN1{}
+	return &FiveN1{
+		client: &http.Client{},
+		cookie: &http.Cookie{
+			Name:  "urlJumpIp",
+			Value: "1",
+		},
+	}
+}
+
+func (f *FiveN1) SetReqCookie(region string) {
+	f.cookie.Value = region
+}
+
+func (f *FiveN1) Request(url string) Response {
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	f.queryURL = url
+	req.AddCookie(f.cookie)
+
+	res, err := f.client.Do(req)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return res
 }
 
 func isBooleanNum(field string, n int) error {
@@ -140,9 +173,9 @@ func exportJSON(b []byte) {
 	fmt.Println("🎈 Done！Check out `/tmp/rent.json`.")
 }
 
-func scrapeRentHouse(url string) []*RentHouseInfo {
-	// testURL := "https://rent.591.com.tw/?kind=2&region=1&rentprice=2&hasimg=1&not_cover=1&role=1&order=posttime&orderType=desc"
-	doc, err := goquery.NewDocument(url)
+func scrapeRentHouse(res Response) []*RentHouseInfo {
+	// "https://rent.591.com.tw/?kind=2&region=1&rentprice=2&hasimg=1&not_cover=1&role=1&order=posttime&orderType=desc"
+	doc, err := goquery.NewDocumentFromResponse(res)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -207,22 +240,17 @@ func scrapeRentHouse(url string) []*RentHouseInfo {
 	return rentList
 }
 
-func scrapeRecordsNum(url string) *FiveN1 {
-	doc, err := goquery.NewDocument(url)
+func (f *FiveN1) scrapeRecordsNum(res Response) {
+	doc, err := goquery.NewDocumentFromResponse(res)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	f := NewFiveN1()
-	f.queryURL = url // save URL
 
 	doc.Find(".page-limit > .pageBar > .TotalRecord > .R").Each(func(_ int, selector *goquery.Selection) {
 		totalRecord, _ := strconv.Atoi(stringReplacer(selector.Text()))
 		f.records = totalRecord
 		f.pages = (totalRecord / 30) + 1
 	})
-
-	return f
 }
 
 func main() {
@@ -232,9 +260,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Println(url)
-	f := scrapeRecordsNum(url)
+	// fmt.Println(url)
+	f := NewFiveN1()
+	response := f.Request(url)
+	f.scrapeRecordsNum(response)
 	fmt.Println(f)
-	// l := scrapeRentHouse(url)
-	// fmt.Println(l)
+	// l := scrapeRentHouse(response)
+	// exportJSON(convertToJSON(l))
 }
