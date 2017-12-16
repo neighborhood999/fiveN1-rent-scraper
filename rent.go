@@ -42,10 +42,11 @@ type Options struct {
 	Role      int    `url:"role"`      // 過濾是否為「屋主刊登」 - `0`：否、`1`：是
 }
 
-// Record is the representation records and pages.
-type Record struct {
-	records int
-	pages   int
+// FiveN1 is the representation page information.
+type FiveN1 struct {
+	records  int
+	pages    int
+	queryURL string
 }
 
 var (
@@ -73,9 +74,9 @@ func NewOptions() *Options {
 	}
 }
 
-// NewRecord creates a record.
-func NewRecord() *Record {
-	return &Record{}
+// NewFiveN1 creates a FiveN1.
+func NewFiveN1() *FiveN1 {
+	return &FiveN1{}
 }
 
 func isBooleanNum(field string, n int) error {
@@ -206,20 +207,22 @@ func scrapeRentHouse(url string) []*RentHouseInfo {
 	return rentList
 }
 
-func scrapeRecordsNum(url string) *Record {
+func scrapeRecordsNum(url string) *FiveN1 {
 	doc, err := goquery.NewDocument(url)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	r := NewRecord()
+	f := NewFiveN1()
+	f.queryURL = url // save URL
+
 	doc.Find(".page-limit > .pageBar > .TotalRecord > .R").Each(func(_ int, selector *goquery.Selection) {
 		totalRecord, _ := strconv.Atoi(stringReplacer(selector.Text()))
-		r.records = totalRecord
-		r.pages = (totalRecord / 30) + 1
+		f.records = totalRecord
+		f.pages = (totalRecord / 30) + 1
 	})
 
-	return r
+	return f
 }
 
 func main() {
@@ -230,8 +233,8 @@ func main() {
 	}
 
 	fmt.Println(url)
-	// r := scrapeRecordsNum(url)
-	// fmt.Println(r)
+	f := scrapeRecordsNum(url)
+	fmt.Println(f)
 	// l := scrapeRentHouse(url)
 	// fmt.Println(l)
 }
