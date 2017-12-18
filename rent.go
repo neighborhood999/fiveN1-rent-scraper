@@ -46,6 +46,11 @@ type Options struct {
 // Response is the representation http.Response.
 type Response *http.Response
 
+// Document is the representation goquery.Document.
+type Document struct {
+	doc *goquery.Document
+}
+
 // FiveN1 is the representation page information.
 type FiveN1 struct {
 	records  int
@@ -60,12 +65,12 @@ var (
 	rentList []*RentHouseInfo
 )
 
-// NewRentHouseInfo creates a new rent house information.
+// NewRentHouseInfo create a new `RentHouseInfo`.
 func NewRentHouseInfo() *RentHouseInfo {
 	return &RentHouseInfo{}
 }
 
-// NewOptions creates rent default options.
+// NewOptions create a `Options` with default value.
 func NewOptions() *Options {
 	return &Options{
 		Kind:      2,
@@ -80,7 +85,7 @@ func NewOptions() *Options {
 	}
 }
 
-// NewFiveN1 creates a FiveN1.
+// NewFiveN1 create a `FiveN1` with default value.
 func NewFiveN1() *FiveN1 {
 	return &FiveN1{
 		client: &http.Client{},
@@ -91,11 +96,27 @@ func NewFiveN1() *FiveN1 {
 	}
 }
 
+// NewDocument create a `Document` with default value.
+func NewDocument() *Document {
+	return &Document{
+		doc: &goquery.Document{},
+	}
+}
+
+// SetReqCookie set the region value.
 func (f *FiveN1) SetReqCookie(region string) {
 	f.cookie.Value = region
 }
 
-func (f *FiveN1) Request(url string) Response {
+func (d *Document) clone(res Response) {
+	doc, err := goquery.NewDocumentFromResponse(res)
+	if err != nil {
+		log.Fatal(err)
+	}
+	d.doc = doc
+}
+
+func (f *FiveN1) request(url string) Response {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		log.Fatal(err)
@@ -173,13 +194,8 @@ func exportJSON(b []byte) {
 	fmt.Println("🎈 Done！Check out `/tmp/rent.json`.")
 }
 
-func scrapeRentHouse(res Response) []*RentHouseInfo {
+func (f *FiveN1) parseRentHouse(doc *goquery.Document) []*RentHouseInfo {
 	// "https://rent.591.com.tw/?kind=2&region=1&rentprice=2&hasimg=1&not_cover=1&role=1&order=posttime&orderType=desc"
-	doc, err := goquery.NewDocumentFromResponse(res)
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	doc.Find("#content").Each(func(_ int, selector *goquery.Selection) {
 		selector.Find(".listInfo.clearfix").Each(func(item int, listInfo *goquery.Selection) {
 			rentHouse := NewRentHouseInfo()
@@ -240,17 +256,24 @@ func scrapeRentHouse(res Response) []*RentHouseInfo {
 	return rentList
 }
 
-func (f *FiveN1) scrapeRecordsNum(res Response) {
-	doc, err := goquery.NewDocumentFromResponse(res)
-	if err != nil {
-		log.Fatal(err)
-	}
-
+func (f *FiveN1) parseRecordsNum(doc *goquery.Document) {
 	doc.Find(".page-limit > .pageBar > .TotalRecord > .R").Each(func(_ int, selector *goquery.Selection) {
 		totalRecord, _ := strconv.Atoi(stringReplacer(selector.Text()))
 		f.records = totalRecord
 		f.pages = (totalRecord / 30) + 1
 	})
+}
+
+// Scrape create a new Document and clone entire DOM for reuse,
+// and parse rent houses information.
+func (f *FiveN1) Scrape(url string) {
+	d := NewDocument() // Initial document
+	res := f.request(url)
+	d.clone(res)
+
+	f.parseRecordsNum(d.doc)
+	f.parseRentHouse(d.doc)
+	// exportJSON(convertToJSON(f.parseRentHouse(d.doc)))
 }
 
 func main() {
@@ -262,9 +285,6 @@ func main() {
 
 	// fmt.Println(url)
 	f := NewFiveN1()
-	response := f.Request(url)
-	f.scrapeRecordsNum(response)
-	fmt.Println(f)
-	// l := scrapeRentHouse(response)
-	// exportJSON(convertToJSON(l))
+	f.Scrape(url)
+	// fmt.Println(f)
 }
