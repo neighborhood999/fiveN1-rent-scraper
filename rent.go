@@ -15,6 +15,10 @@ import (
 	"github.com/vinta/pangu"
 )
 
+var (
+	rootURL = "https://rent.591.com.tw/"
+)
+
 // RentHouseInfo is the representation rent house information.
 type RentHouseInfo struct {
 	Title      string `json:"title"`
@@ -41,10 +45,14 @@ type Options struct {
 	HasImg    int    `url:"hasimg"`    // 過濾是否有「房屋照片」 - `0`：否、`1`：是
 	NotCover  int    `url:"not_cover"` // 過濾是否為「頂樓加蓋」 - `0`：否、`1`：是
 	Role      int    `url:"role"`      // 過濾是否為「屋主刊登」 - `0`：否、`1`：是
+	FirstRow  int    `url:"firstRow"`  // 頁數設定
 }
 
 // Response is the representation http.Response.
 type Response *http.Response
+
+// RentHouseInfoCollection is the representation house information collection.
+type RentHouseInfoCollection map[int][]*RentHouseInfo
 
 // Document is the representation goquery.Document.
 type Document struct {
@@ -56,14 +64,10 @@ type FiveN1 struct {
 	records  int
 	pages    int
 	queryURL string
+	rentList RentHouseInfoCollection
 	client   *http.Client
 	cookie   *http.Cookie
 }
-
-var (
-	rootURL  = "https://rent.591.com.tw/"
-	rentList []*RentHouseInfo
-)
 
 // NewRentHouseInfo create a new `RentHouseInfo`.
 func NewRentHouseInfo() *RentHouseInfo {
@@ -88,7 +92,8 @@ func NewOptions() *Options {
 // NewFiveN1 create a `FiveN1` with default value.
 func NewFiveN1() *FiveN1 {
 	return &FiveN1{
-		client: &http.Client{},
+		rentList: make(map[int][]*RentHouseInfo),
+		client:   &http.Client{},
 		cookie: &http.Cookie{
 			Name:  "urlJumpIp",
 			Value: "1",
@@ -175,7 +180,7 @@ func fillDescription(s []string) []string {
 	return s
 }
 
-func convertToJSON(list []*RentHouseInfo) []byte {
+func convertToJSON(list RentHouseInfoCollection) []byte {
 	b, err := json.MarshalIndent(list, "", "  ")
 	if err != nil {
 		log.Fatal(err)
@@ -194,7 +199,7 @@ func exportJSON(b []byte) {
 	fmt.Println("🎈 Done！Check out `/tmp/rent.json`.")
 }
 
-func (f *FiveN1) parseRentHouse(doc *goquery.Document) []*RentHouseInfo {
+func (f *FiveN1) parseRentHouse(doc *goquery.Document) {
 	// "https://rent.591.com.tw/?kind=2&region=1&rentprice=2&hasimg=1&not_cover=1&role=1&order=posttime&orderType=desc"
 	doc.Find("#content").Each(func(_ int, selector *goquery.Selection) {
 		selector.Find(".listInfo.clearfix").Each(func(item int, listInfo *goquery.Selection) {
@@ -249,11 +254,9 @@ func (f *FiveN1) parseRentHouse(doc *goquery.Document) []*RentHouseInfo {
 			})
 
 			// Add rent house into list
-			rentList = append(rentList, rentHouse)
+			f.rentList[1] = append(f.rentList[1], rentHouse)
 		})
 	})
-
-	return rentList
 }
 
 func (f *FiveN1) parseRecordsNum(doc *goquery.Document) {
@@ -273,7 +276,7 @@ func (f *FiveN1) Scrape(url string) {
 
 	f.parseRecordsNum(d.doc)
 	f.parseRentHouse(d.doc)
-	// exportJSON(convertToJSON(f.parseRentHouse(d.doc)))
+	// exportJSON(convertToJSON(f.rentList))
 }
 
 func main() {
