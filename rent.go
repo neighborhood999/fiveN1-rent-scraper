@@ -9,13 +9,14 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/google/go-querystring/query"
 	"github.com/vinta/pangu"
 )
 
-var (
+const (
 	rootURL = "https://rent.591.com.tw/"
 )
 
@@ -45,7 +46,6 @@ type Options struct {
 	HasImg    int    `url:"hasimg"`    // 過濾是否有「房屋照片」 - `0`：否、`1`：是
 	NotCover  int    `url:"not_cover"` // 過濾是否為「頂樓加蓋」 - `0`：否、`1`：是
 	Role      int    `url:"role"`      // 過濾是否為「屋主刊登」 - `0`：否、`1`：是
-	FirstRow  int    `url:"firstRow"`  // 頁數設定
 }
 
 // Response is the representation http.Response.
@@ -65,6 +65,8 @@ type FiveN1 struct {
 	pages    int
 	queryURL string
 	rentList RentHouseInfoCollection
+	wg       sync.WaitGroup
+	rw       sync.RWMutex
 	client   *http.Client
 	cookie   *http.Cookie
 }
@@ -90,8 +92,9 @@ func NewOptions() *Options {
 }
 
 // NewFiveN1 create a `FiveN1` with default value.
-func NewFiveN1() *FiveN1 {
+func NewFiveN1(url string) *FiveN1 {
 	return &FiveN1{
+		queryURL: url,
 		rentList: make(map[int][]*RentHouseInfo),
 		client:   &http.Client{},
 		cookie: &http.Cookie{
@@ -108,40 +111,11 @@ func NewDocument() *Document {
 	}
 }
 
-// SetReqCookie set the region value.
-func (f *FiveN1) SetReqCookie(region string) {
-	f.cookie.Value = region
-}
-
-func (d *Document) clone(res Response) {
-	doc, err := goquery.NewDocumentFromResponse(res)
-	if err != nil {
-		log.Fatal(err)
-	}
-	d.doc = doc
-}
-
-func (f *FiveN1) request(url string) Response {
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	f.queryURL = url
-	req.AddCookie(f.cookie)
-
-	res, err := f.client.Do(req)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return res
-}
-
 func isBooleanNum(field string, n int) error {
 	if !(n == 0 || n == 1) {
 		return errors.New(field + " 請輸入 0 或是 1 的值！")
 	}
+
 	return nil
 }
 
@@ -199,8 +173,37 @@ func exportJSON(b []byte) {
 	fmt.Println("🎈 Done！Check out `/tmp/rent.json`.")
 }
 
-func (f *FiveN1) parseRentHouse(doc *goquery.Document) {
-	// "https://rent.591.com.tw/?kind=2&region=1&rentprice=2&hasimg=1&not_cover=1&role=1&order=posttime&orderType=desc"
+func (d *Document) clone(res Response) {
+	doc, err := goquery.NewDocumentFromResponse(res)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	d.doc = doc
+}
+
+// SetReqCookie set the region value.
+func (f *FiveN1) SetReqCookie(region string) {
+	f.cookie.Value = region
+}
+
+func (f *FiveN1) request(url string) Response {
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	req.AddCookie(f.cookie)
+
+	res, err := f.client.Do(req)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return res
+}
+
+func (f *FiveN1) parseRentHouse(page int, doc *goquery.Document) {
 	doc.Find("#content").Each(func(_ int, selector *goquery.Selection) {
 		selector.Find(".listInfo.clearfix").Each(func(item int, listInfo *goquery.Selection) {
 			rentHouse := NewRentHouseInfo()
@@ -254,7 +257,9 @@ func (f *FiveN1) parseRentHouse(doc *goquery.Document) {
 			})
 
 			// Add rent house into list
-			f.rentList[1] = append(f.rentList[1], rentHouse)
+			f.rw.Lock()
+			f.rentList[page+1] = append(f.rentList[page+1], rentHouse)
+			f.rw.Unlock()
 		})
 	})
 }
@@ -267,16 +272,40 @@ func (f *FiveN1) parseRecordsNum(doc *goquery.Document) {
 	})
 }
 
-// Scrape create a new Document and clone entire DOM for reuse,
-// and parse rent houses information.
-func (f *FiveN1) Scrape(url string) {
-	d := NewDocument() // Initial document
-	res := f.request(url)
+func (f *FiveN1) firstPage() {
+	d := NewDocument()
+	fmt.Println(f.queryURL)
+	res := f.request(f.queryURL)
 	d.clone(res)
 
 	f.parseRecordsNum(d.doc)
-	f.parseRentHouse(d.doc)
-	// exportJSON(convertToJSON(f.rentList))
+	f.parseRentHouse(0, d.doc)
+}
+
+func (f *FiveN1) worker(n int) {
+	defer f.wg.Done()
+
+	d := NewDocument() // Initial document
+	r := strconv.Itoa(n * 30)
+	fmt.Println(f.queryURL + "&firstRow=" + r)
+	res := f.request(f.queryURL + "&firstRow=" + r)
+	d.clone(res)
+
+	f.parseRentHouse(n, d.doc)
+}
+
+// Scrape create a new Document and clone entire DOM for reuse,
+// and parse rent houses information.
+func (f *FiveN1) Scrape(page int) {
+	f.firstPage()
+
+	for i := 1; i < page; i++ {
+		fmt.Println("Start worker at page number:", i)
+		f.wg.Add(1)
+		go f.worker(i)
+	}
+
+	f.wg.Wait()
 }
 
 func main() {
@@ -286,8 +315,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// fmt.Println(url)
-	f := NewFiveN1()
-	f.Scrape(url)
-	// fmt.Println(f)
+	f := NewFiveN1(url)
+	f.Scrape(2)
+	// exportJSON(convertToJSON(f.rentList))
 }
