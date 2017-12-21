@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -170,7 +169,7 @@ func exportJSON(b []byte) {
 	}
 
 	f.Write(b)
-	fmt.Println("🎈 Done！Check out `/tmp/rent.json`.")
+	log.Println("✔️  Export Path: \x1b[42m/tmp/rent.json\x1b[0m")
 }
 
 func (d *Document) clone(res Response) {
@@ -274,33 +273,38 @@ func (f *FiveN1) parseRecordsNum(doc *goquery.Document) {
 
 func (f *FiveN1) firstPage() {
 	d := NewDocument()
-	fmt.Println(f.queryURL)
 	res := f.request(f.queryURL)
 	d.clone(res)
 
-	f.parseRecordsNum(d.doc)
+	f.parseRecordsNum(d.doc) // Record pages number at first
+	log.Println("------------------")
+	log.Printf("| Total Page: \x1b[94;1m%d\x1b[0m |", f.pages)
+	log.Println("------------------")
 	f.parseRentHouse(0, d.doc)
 }
 
 func (f *FiveN1) worker(n int) {
 	defer f.wg.Done()
+	log.Printf("\x1b[30;1mStart worker at page number: %d\x1b[0m", n)
 
-	d := NewDocument() // Initial document
+	d := NewDocument()
 	r := strconv.Itoa(n * 30)
-	fmt.Println(f.queryURL + "&firstRow=" + r)
 	res := f.request(f.queryURL + "&firstRow=" + r)
 	d.clone(res)
 
 	f.parseRentHouse(n, d.doc)
 }
 
-// Scrape create a new Document and clone entire DOM for reuse,
-// and parse rent houses information.
+// Scrape will clone entire DOM for reuse.
+// It will scrape first page at first, if specify page number > 1,
+// it will start workers.
 func (f *FiveN1) Scrape(page int) {
 	f.firstPage()
+	if page > f.pages {
+		log.Fatal("\x1b[91;1mNo More Pages！\x1b[0m")
+	}
 
 	for i := 1; i < page; i++ {
-		fmt.Println("Start worker at page number:", i)
 		f.wg.Add(1)
 		go f.worker(i)
 	}
@@ -312,7 +316,7 @@ func main() {
 	o := NewOptions()
 	url, err := generateURL(*o)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("\x1b[91;1m%s\x1b[0m", err)
 	}
 
 	f := NewFiveN1(url)
