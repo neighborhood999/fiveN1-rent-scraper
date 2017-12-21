@@ -285,7 +285,7 @@ func (f *FiveN1) firstPage() {
 
 func (f *FiveN1) worker(n int) {
 	defer f.wg.Done()
-	log.Printf("\x1b[30;1mStart worker at page number: %d\x1b[0m", n)
+	log.Printf("\x1b[30;1mStart worker at page number: %d\x1b[0m", n+1)
 
 	d := NewDocument()
 	r := strconv.Itoa(n * 30)
