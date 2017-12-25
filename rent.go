@@ -63,7 +63,7 @@ type FiveN1 struct {
 	records  int
 	pages    int
 	queryURL string
-	rentList HouseInfoCollection
+	RentList HouseInfoCollection
 	wg       sync.WaitGroup
 	rw       sync.RWMutex
 	client   *http.Client
@@ -94,7 +94,7 @@ func NewOptions() *Options {
 func NewFiveN1(url string) *FiveN1 {
 	return &FiveN1{
 		queryURL: url,
-		rentList: make(map[int][]*HouseInfo),
+		RentList: make(map[int][]*HouseInfo),
 		client:   &http.Client{},
 		cookie: &http.Cookie{
 			Name:  "urlJumpIp",
@@ -260,7 +260,7 @@ func (f *FiveN1) parseRentHouse(page int, doc *goquery.Document) {
 
 			// Add rent house into list
 			f.rw.Lock()
-			f.rentList[page+1] = append(f.rentList[page+1], houseInfo)
+			f.RentList[page+1] = append(f.RentList[page+1], houseInfo)
 			f.rw.Unlock()
 		})
 	})
