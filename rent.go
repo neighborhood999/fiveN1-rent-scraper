@@ -1,4 +1,4 @@
-package main
+package rent
 
 import (
 	"encoding/json"
@@ -19,8 +19,8 @@ const (
 	rootURL = "https://rent.591.com.tw/"
 )
 
-// RentHouseInfo is the representation rent house information.
-type RentHouseInfo struct {
+// HouseInfo is the representation rent house information.
+type HouseInfo struct {
 	Title      string `json:"title"`
 	URL        string `json:"url"`
 	Address    string `json:"address"`
@@ -50,8 +50,8 @@ type Options struct {
 // Response is the representation http.Response.
 type Response *http.Response
 
-// RentHouseInfoCollection is the representation house information collection.
-type RentHouseInfoCollection map[int][]*RentHouseInfo
+// HouseInfoCollection is the representation house information collection.
+type HouseInfoCollection map[int][]*HouseInfo
 
 // Document is the representation goquery.Document.
 type Document struct {
@@ -63,16 +63,16 @@ type FiveN1 struct {
 	records  int
 	pages    int
 	queryURL string
-	rentList RentHouseInfoCollection
+	rentList HouseInfoCollection
 	wg       sync.WaitGroup
 	rw       sync.RWMutex
 	client   *http.Client
 	cookie   *http.Cookie
 }
 
-// NewRentHouseInfo create a new `RentHouseInfo`.
-func NewRentHouseInfo() *RentHouseInfo {
-	return &RentHouseInfo{}
+// NewHouseInfo create a new `HouseInfo`.
+func NewHouseInfo() *HouseInfo {
+	return &HouseInfo{}
 }
 
 // NewOptions create a `Options` with default value.
@@ -94,7 +94,7 @@ func NewOptions() *Options {
 func NewFiveN1(url string) *FiveN1 {
 	return &FiveN1{
 		queryURL: url,
-		rentList: make(map[int][]*RentHouseInfo),
+		rentList: make(map[int][]*HouseInfo),
 		client:   &http.Client{},
 		cookie: &http.Cookie{
 			Name:  "urlJumpIp",
@@ -118,7 +118,8 @@ func isBooleanNum(field string, n int) error {
 	return nil
 }
 
-func generateURL(o Options) (string, error) {
+// GenerateURL is convert options to query parameters.
+func GenerateURL(o Options) (string, error) {
 	if err := isBooleanNum("`HasImg`", o.HasImg); err != nil {
 		return "", err
 	}
@@ -153,7 +154,8 @@ func fillDescription(s []string) []string {
 	return s
 }
 
-func convertToJSON(list RentHouseInfoCollection) []byte {
+// ConvertToJSON is convert rent house info collection to json.
+func ConvertToJSON(list HouseInfoCollection) []byte {
 	b, err := json.MarshalIndent(list, "", "  ")
 	if err != nil {
 		log.Fatal(err)
@@ -162,7 +164,8 @@ func convertToJSON(list RentHouseInfoCollection) []byte {
 	return b
 }
 
-func exportJSON(b []byte) {
+// ExportJSON export json file.
+func ExportJSON(b []byte) {
 	f, err := os.Create("/tmp/rent.json")
 	if err != nil {
 		log.Fatal(err)
@@ -205,18 +208,18 @@ func (f *FiveN1) request(url string) Response {
 func (f *FiveN1) parseRentHouse(page int, doc *goquery.Document) {
 	doc.Find("#content").Each(func(_ int, selector *goquery.Selection) {
 		selector.Find(".listInfo.clearfix").Each(func(item int, listInfo *goquery.Selection) {
-			rentHouse := NewRentHouseInfo()
+			houseInfo := NewHouseInfo()
 
 			// Content Title
 			title := listInfo.Find(".pull-left.infoContent > h3 > a[href]").Text()
-			rentHouse.Title = stringReplacer(title)
+			houseInfo.Title = stringReplacer(title)
 
 			// Content URL
 			var url string
 			if href, ok := listInfo.Find(".pull-left.infoContent > h3 > a").Attr("href"); ok {
 				url = stringReplacer(href)
 			}
-			rentHouse.URL = "https:" + url
+			houseInfo.URL = "https:" + url
 
 			listInfo.Find(".pull-left.infoContent").Each(func(_ int, infoContent *goquery.Selection) {
 				// Rent House Description.
@@ -235,29 +238,29 @@ func (f *FiveN1) parseRentHouse(page int, doc *goquery.Document) {
 					splitDescription = fillDescription(splitDescription)
 				}
 
-				rentHouse.OptionType = trimTextSpace(splitDescription[0])
-				rentHouse.Ping = trimTextSpace(splitDescription[1])
-				rentHouse.RentType = trimTextSpace(splitDescription[2])
-				rentHouse.Floor = trimTextSpace(splitDescription[3])
+				houseInfo.OptionType = trimTextSpace(splitDescription[0])
+				houseInfo.Ping = trimTextSpace(splitDescription[1])
+				houseInfo.RentType = trimTextSpace(splitDescription[2])
+				houseInfo.Floor = trimTextSpace(splitDescription[3])
 
 				// Rent House Address
 				address := stringReplacer(infoContent.Find(".lightBox").Eq(1).Text())
-				rentHouse.Address = address
+				houseInfo.Address = address
 			})
 
 			// Rent Price
 			listInfo.Find(".price").Each(func(_ int, price *goquery.Selection) {
-				rentHouse.Price = stringReplacer(price.Text())
+				houseInfo.Price = stringReplacer(price.Text())
 			})
 
 			// New Rent House
 			listInfo.Find(".newArticle").Each(func(_ int, n *goquery.Selection) {
-				rentHouse.IsNew = true
+				houseInfo.IsNew = true
 			})
 
 			// Add rent house into list
 			f.rw.Lock()
-			f.rentList[page+1] = append(f.rentList[page+1], rentHouse)
+			f.rentList[page+1] = append(f.rentList[page+1], houseInfo)
 			f.rw.Unlock()
 		})
 	})
@@ -310,16 +313,4 @@ func (f *FiveN1) Scrape(page int) {
 	}
 
 	f.wg.Wait()
-}
-
-func main() {
-	o := NewOptions()
-	url, err := generateURL(*o)
-	if err != nil {
-		log.Fatalf("\x1b[91;1m%s\x1b[0m", err)
-	}
-
-	f := NewFiveN1(url)
-	f.Scrape(2)
-	// exportJSON(convertToJSON(f.rentList))
 }
