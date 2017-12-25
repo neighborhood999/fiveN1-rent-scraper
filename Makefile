@@ -10,10 +10,10 @@ test:
 	echo 'BOMB!'
 
 run:
-	$(GORUN) ./example/main.go
+	$(GORUN) ./_example/main.go
 
 race_detect:
-	$(GORUN) -race ./example/main.go
+	$(GORUN) -race ./_example/main.go
 
 install:
 	$(GOGET) github.com/PuerkitoBio/goquery

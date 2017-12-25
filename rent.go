@@ -119,7 +119,7 @@ func isBooleanNum(field string, n int) error {
 }
 
 // GenerateURL is convert options to query parameters.
-func GenerateURL(o Options) (string, error) {
+func GenerateURL(o *Options) (string, error) {
 	if err := isBooleanNum("`HasImg`", o.HasImg); err != nil {
 		return "", err
 	}
