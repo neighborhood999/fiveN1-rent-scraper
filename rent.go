@@ -32,7 +32,7 @@ type HouseInfo struct {
 	IsNew      bool   `json:"isNew"`
 }
 
-// Options is the representation query arugment.
+// Options is the representation query argument.
 type Options struct {
 	Region    int    `url:"region"`    // 地區 - 預設：`1`
 	Section   string `url:"section"`   // 鄉鎮 - 可選擇多個區域，例如：`section=7,4`
@@ -280,9 +280,10 @@ func (f *FiveN1) firstPage() {
 	d.clone(res)
 
 	f.parseRecordsNum(d.doc) // Record pages number at first
-	log.Println("------------------")
-	log.Printf("| Total Page: \x1b[94;1m%d\x1b[0m |", f.pages)
-	log.Println("------------------")
+	log.Println("---------------------")
+	log.Printf("| Total Record: \x1b[94;1m%d\x1b[0m |", f.records)
+	log.Printf("| Total Page:   \x1b[94;1m%d\x1b[0m  |", f.pages)
+	log.Println("---------------------")
 	f.parseRentHouse(0, d.doc)
 }
 
