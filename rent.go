@@ -47,9 +47,6 @@ type Options struct {
 	Role      int    `url:"role"`      // 過濾是否為「屋主刊登」 - `0`：否、`1`：是
 }
 
-// Response is the representation http.Response.
-type Response *http.Response
-
 // HouseInfoCollection is the representation house information collection.
 type HouseInfoCollection map[int][]*HouseInfo
 
@@ -175,7 +172,7 @@ func ExportJSON(b []byte) {
 	log.Println("✔️  Export Path: \x1b[42m/tmp/rent.json\x1b[0m")
 }
 
-func (d *Document) clone(res Response) {
+func (d *Document) clone(res *http.Response) {
 	doc, err := goquery.NewDocumentFromResponse(res)
 	if err != nil {
 		log.Fatal(err)
@@ -189,7 +186,7 @@ func (f *FiveN1) SetReqCookie(region string) {
 	f.cookie.Value = region
 }
 
-func (f *FiveN1) request(url string) Response {
+func (f *FiveN1) request(url string) *http.Response {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		log.Fatal(err)

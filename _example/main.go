@@ -14,7 +14,7 @@ func main() {
 	}
 
 	f := rent.NewFiveN1(url)
-	f.Scrape(2)
+	f.Scrape(1)
 
 	json := rent.ConvertToJSON(f.RentList)
 	log.Println(string(json))
