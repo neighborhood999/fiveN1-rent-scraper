@@ -24,18 +24,6 @@ $ go get github.com/neighborhood999/fiveN1-rent-scraper
 
 ## Usage
 
-Create default options and you can generate url:
-
-```go
-o := rent.NewOptions()
-url, _ := rent.GenerateURL(o)
-log.Println(url)
-```
-
-or you can setting options for your requirement.
-
-## Example
-
 ```go
 import (
 	"log"
@@ -79,6 +67,34 @@ And output json:
 ```
 
 Index number is the representation **page number**, every index contain **30** items. 🏠
+
+## Options
+
+Create default options then you can generate url:
+
+```go
+o := rent.NewOptions()
+url, _ := rent.GenerateURL(o)
+log.Println(url)
+```
+
+or you can setting more detail for your requirement, please reference below:
+
+```go
+type Options struct {
+	Region    int    `url:"region"`    // 地區 - 預設：`1`
+	Section   string `url:"section"`   // 鄉鎮 - 可選擇多個區域，例如：`section=7,4`
+	Kind      int    `url:"kind"`      // 租屋類型 - `0`：不限、`1`：整層住家、`2`：獨立套房、`3`：分租套房、`4`：雅房、`5`：車位，`6`：其他
+	RentPrice string `url:"rentprice"` // 租金 - `2`：5k - 10k、`3`：10k - 20k、`4`: 20k - 30k；或者可以輸入價格範圍，例如：`0,10000`
+	Area      string `url:"area"`      // 坪數格式 - `10,20`（10 到 20 坪）
+	Order     string `url:"order"`     // 貼文時間 - 預設：`posttime`
+	OrderType string `url:"ordertype"` // 排序方式 - `desc` 或 `asc`
+	Sex       int    `url:"sex"`       // 性別 - `0`：不限、`1`：男性、`2`：女性
+	HasImg    int    `url:"hasimg"`    // 過濾是否有「房屋照片」 - `0`：否、`1`：是
+	NotCover  int    `url:"not_cover"` // 過濾是否為「頂樓加蓋」 - `0`：否、`1`：是
+	Role      int    `url:"role"`      // 過濾是否為「屋主刊登」 - `0`：否、`1`：是
+}
+```
 
 ## Multiple Page Scrape
 
