@@ -7,7 +7,7 @@ GOCLEAN=$(GOCMD) clean
 all: test
 
 test:
-	echo 'BOMB!'
+	$(GOTEST) -v
 
 run:
 	$(GORUN) ./_example/main.go
@@ -19,6 +19,7 @@ install:
 	$(GOGET) github.com/PuerkitoBio/goquery
 	$(GOGET) github.com/google/go-querystring/query
 	$(GOGET) github.com/vinta/pangu
+	$(GOGET) github.com/stretchr/testify/assert
 
 clean:
 	$(GOCLEAN) -x -i ./...
