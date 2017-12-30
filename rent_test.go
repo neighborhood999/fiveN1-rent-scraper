@@ -43,3 +43,27 @@ func TestSetReqCookie(t *testing.T) {
 
 	assert.Equal(t, "urlJumpIp=2", f.cookie.String())
 }
+
+func TestConvertToJSON(t *testing.T) {
+	hm := make(map[int][]*HouseInfo)
+	h := NewHouseInfo()
+
+	h.Title = "Test Rent House Inforation"
+	h.URL = "https://github.com/neighborhood999/fiveN1-rent-scraper"
+	h.Address = "Taipei, Taiwan"
+	h.RentType = "沒有格局說明"
+	h.OptionType = "獨立套房"
+	h.Ping = "9"
+	h.Floor = "樓層：7/9"
+	h.Price = "10,000 元 / 月"
+	h.IsNew = true
+
+	s := make([]*HouseInfo, 1)
+	s[0] = h
+	hm[0] = s
+
+	b := ConvertToJSON(hm)
+
+	var expectedType []byte
+	assert.IsType(t, expectedType, b)
+}
