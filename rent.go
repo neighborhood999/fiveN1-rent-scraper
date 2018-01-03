@@ -167,6 +167,7 @@ func ExportJSON(b []byte) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer f.Close()
 
 	f.Write(b)
 	log.Println("✔️  Export Path: \x1b[42m/tmp/rent.json\x1b[0m")
