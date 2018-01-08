@@ -10,9 +10,10 @@ import (
 )
 
 const (
-	hasImgErrMessage   = "`HasImg` 請輸入 0 或是 1 的值！"
-	notCoverErrMessage = "`NotCover` 請輸入 0 或是 1 的值！"
-	roleErrMessage     = "`Role` 請輸入 0 或是 1 的值！"
+	hasImgErrMessage     = "`HasImg` 請輸入 0 或是 1 的值！"
+	notCoverErrMessage   = "`NotCover` 請輸入 0 或是 1 的值！"
+	roleErrMessage       = "`Role` 請輸入 0 或是 1 的值！"
+	noMorePageErrMessage = "\x1b[91;1mNo More Pages！\x1b[0m"
 )
 
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
@@ -96,4 +97,7 @@ func TestScrape(t *testing.T) {
 
 	assert.Equal(t, expectedPages, f.pages)
 	assert.Equal(t, expectedRecords, f.records)
+
+	err := f.Scrape(13)
+	assert.EqualError(t, err, noMorePageErrMessage)
 }
