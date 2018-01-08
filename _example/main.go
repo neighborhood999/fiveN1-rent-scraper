@@ -14,7 +14,9 @@ func main() {
 	}
 
 	f := rent.NewFiveN1(url)
-	f.Scrape(1)
+	if err := f.Scrape(1); err != nil {
+		log.Fatal(err)
+	}
 
 	json := rent.ConvertToJSON(f.RentList)
 	log.Println(string(json))
