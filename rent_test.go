@@ -1,6 +1,9 @@
 package rent
 
 import (
+	"io/ioutil"
+	"net/http"
+	"net/http/httptest"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -11,6 +14,13 @@ const (
 	notCoverErrMessage = "`NotCover` 請輸入 0 或是 1 的值！"
 	roleErrMessage     = "`Role` 請輸入 0 或是 1 的值！"
 )
+
+func callbackHandler(w http.ResponseWriter, r *http.Request) {
+	html, _ := ioutil.ReadFile("_fixtures/index.html")
+	w.Header().Set("Content-Type", "application/html")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(html))
+}
 
 func TestGenerateURL(t *testing.T) {
 	var err error
@@ -66,4 +76,24 @@ func TestConvertToJSON(t *testing.T) {
 
 	var expectedType []byte
 	assert.IsType(t, expectedType, b)
+}
+
+func TestExportJSON(t *testing.T) {
+	text := []byte("Hello, World")
+	ExportJSON(text)
+}
+
+func TestScrape(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(callbackHandler))
+	defer server.Close()
+	mockURL := server.URL
+
+	expectedPages := 12
+	expectedRecords := 333
+
+	f := NewFiveN1(mockURL)
+	f.Scrape(1)
+
+	assert.Equal(t, expectedPages, f.pages)
+	assert.Equal(t, expectedRecords, f.records)
 }
