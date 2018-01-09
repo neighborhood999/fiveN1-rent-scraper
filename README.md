@@ -2,6 +2,7 @@
 
 ![logo](./logo/fiveN1-rent-scraper-logo.png)
 [![godoc](https://camo.githubusercontent.com/5771fd8cd24b1f8c34b82f152587dbce2294d9e1/68747470733a2f2f676f646f632e6f72672f6769746875622e636f6d2f746a2f6e6f64652d7072756e653f7374617475732e737667)](https://godoc.org/github.com/neighborhood999/fiveN1-rent-scraper)
+[![Build Status](https://img.shields.io/travis/neighborhood999/fiveN1-rent-scraper.svg?style=flat-square)](https://travis-ci.org/neighborhood999/fiveN1-rent-scraper)
 [![Go Report Card](https://goreportcard.com/badge/github.com/neighborhood999/fiveN1-rent-scraper)](https://goreportcard.com/report/github.com/neighborhood999/fiveN1-rent-scraper)
 
 > a.k.a 591 rent scraper.
@@ -39,7 +40,9 @@ func main() {
 	}
 
 	f := rent.NewFiveN1(url)
-	f.Scrape(1)
+	if err := f.Scrape(1); err != nil {
+		log.Fatal(err)
+	}
 
 	json := rent.ConvertToJSON(f.RentList)
 	log.Println(string(json))
