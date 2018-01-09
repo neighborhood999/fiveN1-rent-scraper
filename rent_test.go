@@ -17,7 +17,7 @@ const (
 )
 
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
-	html, _ := ioutil.ReadFile("_fixtures/index.html")
+	html, _ := ioutil.ReadFile("_fixtures/index")
 	w.Header().Set("Content-Type", "application/html")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(html))
