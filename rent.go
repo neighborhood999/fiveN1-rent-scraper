@@ -300,10 +300,10 @@ func (f *FiveN1) worker(n int) {
 // Scrape will clone entire DOM for reuse.
 // It will scrape first page at first, if specify page number > 1,
 // it will start workers.
-func (f *FiveN1) Scrape(page int) {
+func (f *FiveN1) Scrape(page int) error {
 	f.firstPage()
 	if page > f.pages {
-		log.Fatal("\x1b[91;1mNo More Pages！\x1b[0m")
+		return errors.New("\x1b[91;1mNo More Pages！\x1b[0m")
 	}
 
 	for i := 1; i < page; i++ {
@@ -312,4 +312,6 @@ func (f *FiveN1) Scrape(page int) {
 	}
 
 	f.wg.Wait()
+
+	return nil
 }
