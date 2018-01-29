@@ -21,6 +21,7 @@ const (
 
 // HouseInfo is the representation rent house information.
 type HouseInfo struct {
+	Preview    string `json:"preview"`
 	Title      string `json:"title"`
 	URL        string `json:"url"`
 	Address    string `json:"address"`
@@ -218,6 +219,10 @@ func (f *FiveN1) parseRentHouse(page int, doc *goquery.Document) {
 				url = stringReplacer(href)
 			}
 			houseInfo.URL = "https:" + url
+
+			if preview, ok := listInfo.Find(".pull-left.imageBox > img").Attr("data-original"); ok {
+				houseInfo.Preview = preview
+			}
 
 			listInfo.Find(".pull-left.infoContent").Each(func(_ int, infoContent *goquery.Selection) {
 				// Rent House Description.
