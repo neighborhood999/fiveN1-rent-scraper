@@ -1,5 +1,63 @@
 ## 各縣市鄉鎮地區代號
 
+<h3>台北市</h3>
+<table>
+    <thead>
+        <th>名稱</th>
+        <th>代碼</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>中正區</td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <td>大同區</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td>中山區</td>
+            <td>3</td>
+        </tr>
+        <tr>
+            <td>松山區</td>
+            <td>4</td>
+        </tr>
+        <tr>
+            <td>大安區</td>
+            <td>5</td>
+        </tr>
+        <tr>
+            <td>萬華區</td>
+            <td>6</td>
+        </tr>
+        <tr>
+            <td>信義區</td>
+            <td>7</td>
+        </tr>
+        <tr>
+            <td>士林區</td>
+            <td>8</td>
+        </tr>
+        <tr>
+            <td>北投區</td>
+            <td>9</td>
+        </tr>
+        <tr>
+            <td>內湖區</td>
+            <td>10</td>
+        </tr>
+        <tr>
+            <td>南港區</td>
+            <td>11</td>
+        </tr>
+        <tr>
+            <td>文山區</td>
+            <td>12</td>
+        </tr>
+    </tbody>
+</table>
+
 <h3>基隆市</h3>
 <table>
     <thead>
