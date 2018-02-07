@@ -55,14 +55,15 @@ And output json:
 {
   "1": [
     {
-      "title": "臨近北醫，精緻單人套房 (5 樓 B 室)",
-      "url": "https://rent.591.com.tw/rent-detail-5926570.html",
-      "address": "信義區 - 吳興街 336 巷",
+			"preview": "https://hp1.591.com.tw/house/active/2013/11/04/138356961541004002_210x158.crop.jpg",
+      "title": "松山路套房 * 交通方便近捷運後山埤站 *",
+      "url": "https://rent.591.com.tw/rent-detail-5857738.html",
+      "address": "信義區 - 松山路 119 巷",
       "rentType": "沒有格局說明",
       "optionType": "獨立套房",
-      "ping": "5.5",
-      "floor": "樓層：5/6",
-      "price": "8,600 元 / 月",
+      "ping": "6",
+      "floor": "樓層：3/4",
+      "price": "9,000 元 / 月",
       "isNew": true
     }
   ]
