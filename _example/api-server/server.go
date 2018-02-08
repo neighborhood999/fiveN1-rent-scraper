@@ -13,6 +13,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
 	if r.Method == "GET" {
+		options.Section = r.FormValue("section")
 		options.Area = r.FormValue("area")
 		options.RentPrice = r.FormValue("rentPrice")
 		options.Order = r.FormValue("order")
