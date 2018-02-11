@@ -270,7 +270,7 @@ func (f *FiveN1) parseRentHouse(page int, doc *goquery.Document) {
 }
 
 func (f *FiveN1) parseRecordsNum(doc *goquery.Document) {
-	doc.Find(".page-limit > .pageBar > .TotalRecord > .R").Each(func(_ int, selector *goquery.Selection) {
+	doc.Find(".pull-left.hasData > i").Each(func(_ int, selector *goquery.Selection) {
 		totalRecord, _ := strconv.Atoi(stringReplacer(selector.Text()))
 		f.records = totalRecord
 		f.pages = (totalRecord / 30) + 1
