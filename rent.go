@@ -220,7 +220,8 @@ func (f *FiveN1) parseRentHouse(page int, doc *goquery.Document) {
 			}
 			houseInfo.URL = "https:" + url
 
-			if preview, ok := listInfo.Find(".pull-left.imageBox > img").Attr("data-original"); ok {
+			if crop, ok := listInfo.Find(".pull-left.imageBox > img").Attr("data-original"); ok {
+				preview := strings.Replace(crop, "210x158.crop.jpg", "765x517.water3.jpg", 1)
 				houseInfo.Preview = preview
 			}
 
