@@ -56,7 +56,7 @@ And output json:
   "1": [
     {
       "preview":
-        "https://hp1.591.com.tw/house/active/2013/11/04/138356961541004002_210x158.crop.jpg",
+        "https://hp1.591.com.tw/house/active/2013/11/04/138356961541004002_765x517.water3.jpg",
       "title": "松山路套房 * 交通方便近捷運後山埤站 *",
       "url": "https://rent.591.com.tw/rent-detail-5857738.html",
       "address": "信義區 - 松山路 119 巷",
