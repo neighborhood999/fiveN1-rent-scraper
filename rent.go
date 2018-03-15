@@ -285,6 +285,7 @@ func (f *FiveN1) firstPage() {
 
 	f.parseRecordsNum(d.doc) // Record pages number at first
 	log.Println("---------------------")
+	log.Printf("| Query URL:    \x1b[94;1m%v\x1b[0m |", f.queryURL)
 	log.Printf("| Total Record: \x1b[94;1m%d\x1b[0m |", f.records)
 	log.Printf("| Total Page:   \x1b[94;1m%d\x1b[0m  |", f.pages)
 	log.Println("---------------------")
