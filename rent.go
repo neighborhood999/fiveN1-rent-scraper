@@ -46,6 +46,7 @@ type Options struct {
 	HasImg    int    `url:"hasimg"`    // 過濾是否有「房屋照片」 - `0`：否、`1`：是
 	NotCover  int    `url:"not_cover"` // 過濾是否為「頂樓加蓋」 - `0`：否、`1`：是
 	Role      int    `url:"role"`      // 過濾是否為「屋主刊登」 - `0`：否、`1`：是
+	FirstRow  int    `url:"firstRow"`
 }
 
 // HouseInfoCollection is the representation house information collection.
@@ -85,6 +86,7 @@ func NewOptions() *Options {
 		Role:      0,
 		Order:     "posttime",
 		OrderType: "desc",
+		FirstRow:  0,
 	}
 }
 
