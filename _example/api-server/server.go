@@ -18,6 +18,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		options.RentPrice = r.FormValue("rentPrice")
 		options.Order = r.FormValue("order")
 		options.OrderType = r.FormValue("orderType")
+		options.FirstRow, _ = strconv.Atoi(r.FormValue("firstRow"))
 		options.Kind, _ = strconv.Atoi(r.FormValue("kind"))
 		options.HasImg, _ = strconv.Atoi(r.FormValue("hasImage"))
 		options.Role, _ = strconv.Atoi(r.FormValue("role"))
