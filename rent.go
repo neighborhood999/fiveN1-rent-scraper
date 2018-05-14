@@ -37,7 +37,7 @@ type HouseInfo struct {
 type Options struct {
 	Region    int    `url:"region"`    // 地區 - 預設：`1`
 	Section   string `url:"section"`   // 鄉鎮 - 可選擇多個區域，例如：`section=7,4`
-	Kind      int    `url:"kind"`      // 租屋類型 - `0`：不限、`1`：整層住家、`2`：獨立套房、`3`：分租套房、`4`：雅房、`5`：車位，`6`：其他
+	Kind      int    `url:"kind"`      // 租屋類型 - `0`：不限、`1`：整層住家、`2`：獨立套房、`3`：分租套房、`4`：雅房、`8`：車位，`24`：其他
 	RentPrice string `url:"rentprice"` // 租金 - `2`：5k - 10k、`3`：10k - 20k、`4`: 20k - 30k；或者可以輸入價格範圍，例如：`0,10000`
 	Area      string `url:"area"`      // 坪數格式 - `10,20`（10 到 20 坪）
 	Order     string `url:"order"`     // 貼文時間 - 預設：`posttime`
