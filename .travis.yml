@@ -5,7 +5,11 @@ go:
   - 1.9
   - tip
 
-script:
-  - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+before_install:
+  - curl -L -shttps://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+
+install:
   - dep ensure -v -vendor-only
+
+script:
   - make test
