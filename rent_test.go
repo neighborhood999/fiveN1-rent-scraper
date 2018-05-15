@@ -10,9 +10,6 @@ import (
 )
 
 const (
-	hasImgErrMessage     = "`HasImg` 請輸入 0 或是 1 的值！"
-	notCoverErrMessage   = "`NotCover` 請輸入 0 或是 1 的值！"
-	roleErrMessage       = "`Role` 請輸入 0 或是 1 的值！"
 	noMorePageErrMessage = "\x1b[91;1mNo More Pages！\x1b[0m"
 )
 
@@ -29,21 +26,6 @@ func TestGenerateURL(t *testing.T) {
 
 	_, err = GenerateURL(o)
 	assert.EqualValues(t, nil, err)
-
-	o.HasImg = 2
-	_, err = GenerateURL(o)
-	assert.EqualError(t, err, hasImgErrMessage)
-
-	o.HasImg = 1
-	o.NotCover = 2
-	_, err = GenerateURL(o)
-	assert.EqualError(t, err, notCoverErrMessage)
-
-	o.HasImg = 1
-	o.NotCover = 1
-	o.Role = 2
-	_, err = GenerateURL(o)
-	assert.EqualError(t, err, roleErrMessage)
 }
 
 func TestSetReqCookie(t *testing.T) {

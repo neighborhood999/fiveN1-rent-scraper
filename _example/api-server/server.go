@@ -20,9 +20,9 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		options.OrderType = r.FormValue("orderType")
 		options.FirstRow, _ = strconv.Atoi(r.FormValue("firstRow"))
 		options.Kind, _ = strconv.Atoi(r.FormValue("kind"))
-		options.HasImg, _ = strconv.Atoi(r.FormValue("hasImage"))
-		options.Role, _ = strconv.Atoi(r.FormValue("role"))
-		options.NotCover, _ = strconv.Atoi(r.FormValue("notCover"))
+		options.HasImg = r.FormValue("hasImage")
+		options.Role = r.FormValue("role")
+		options.NotCover = r.FormValue("notCover")
 		options.Sex, _ = strconv.Atoi(r.FormValue("sex"))
 
 		url, err := rent.GenerateURL(options)
@@ -50,5 +50,5 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	http.HandleFunc("/", callbackHandler)
-	http.ListenAndServe(":8888", nil)
+	http.ListenAndServe(":8080", nil)
 }
