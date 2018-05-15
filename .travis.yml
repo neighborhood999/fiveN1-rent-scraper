@@ -6,4 +6,6 @@ go:
   - tip
 
 script:
+  - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+  - dep ensure -v -vendor-only
   - make test
