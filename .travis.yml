@@ -11,7 +11,7 @@ cache:
     - $GOPATH/pkg/dep
 
 before_install:
-  - curl -L -shttps://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+  - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 
 install:
   - dep ensure -v -vendor-only
