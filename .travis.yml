@@ -3,7 +3,12 @@ language: go
 go:
   - 1.8
   - 1.9
+  - 1.10
   - tip
+
+cache:
+  directories:
+    - $GOPATH/pkg/dep
 
 before_install:
   - curl -L -shttps://raw.githubusercontent.com/golang/dep/master/install.sh | sh
