@@ -43,9 +43,9 @@ type Options struct {
 	Order     string `url:"order"`     // 貼文時間 - 預設：`posttime`
 	OrderType string `url:"ordertype"` // 排序方式 - `desc` 或 `asc`
 	Sex       int    `url:"sex"`       // 性別 - `0`：不限、`1`：男性、`2`：女性
-	HasImg    int    `url:"hasimg"`    // 過濾是否有「房屋照片」 - `0`：否、`1`：是
-	NotCover  int    `url:"not_cover"` // 過濾是否為「頂樓加蓋」 - `0`：否、`1`：是
-	Role      int    `url:"role"`      // 過濾是否為「屋主刊登」 - `0`：否、`1`：是
+	HasImg    string `url:"hasimg"`    // 過濾是否有「房屋照片」 - ``：空值（不限）、`1`：是
+	NotCover  string `url:"not_cover"` // 過濾是否為「頂樓加蓋」 - ``：空值（不限）、`1`：是
+	Role      string `url:"role"`      // 過濾是否為「屋主刊登」 - ``：空值（不限）、`1`：是
 	FirstRow  int    `url:"firstRow"`
 }
 
@@ -81,9 +81,9 @@ func NewOptions() *Options {
 		Region:    1,
 		Section:   "0",
 		RentPrice: "2",
-		HasImg:    0,
-		NotCover:  0,
-		Role:      0,
+		HasImg:    "",
+		NotCover:  "",
+		Role:      "",
 		Order:     "posttime",
 		OrderType: "desc",
 		FirstRow:  0,
@@ -110,31 +110,11 @@ func NewDocument() *Document {
 	}
 }
 
-func isBooleanNum(field string, n int) error {
-	if !(n == 0 || n == 1) {
-		return errors.New(field + " 請輸入 0 或是 1 的值！")
-	}
-
-	return nil
-}
-
 // GenerateURL is convert options to query parameters.
 func GenerateURL(o *Options) (string, error) {
-	if err := isBooleanNum("`HasImg`", o.HasImg); err != nil {
-		return "", err
-	}
+	v, error := query.Values(o)
 
-	if err := isBooleanNum("`NotCover`", o.NotCover); err != nil {
-		return "", err
-	}
-
-	if err := isBooleanNum("`Role`", o.Role); err != nil {
-		return "", err
-	}
-
-	v, _ := query.Values(o)
-
-	return rootURL + "?" + v.Encode(), nil
+	return rootURL + "?" + v.Encode(), error
 }
 
 func stringReplacer(text string) string {
