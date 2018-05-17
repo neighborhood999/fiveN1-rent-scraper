@@ -17,6 +17,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		options.Role = r.FormValue("role")
 		options.Other = r.FormValue("other")
 		options.Order = r.FormValue("order")
+		options.Shape = r.FormValue("shape")
+		options.Floor = r.FormValue("floor")
 		options.Option = r.FormValue("option")
 		options.HasImg = r.FormValue("hasImage")
 		options.Section = r.FormValue("section")
