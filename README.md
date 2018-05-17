@@ -102,6 +102,8 @@ type Options struct {
 	HasImg    string `url:"hasimg,omitempty"`    // 過濾是否有「房屋照片」 - ``：空值（不限）、`1`：是
 	NotCover  string `url:"not_cover,omitempty"` // 過濾是否為「頂樓加蓋」 - ``：空值（不限）、`1`：是
 	Role      string `url:"role,omitempty"`      // 過濾是否為「屋主刊登」 - ``：空值（不限）、`1`：是
+	Option    string `url:"option,omitempty"`    // 提供設備 - `tv`：電視、`cold`：冷氣、`icebox`：冰箱、`hotwater`：熱水器、`naturalgas`：天然瓦斯、`four`：第四台、`broadband`：網路、`washer`：洗衣機、`bed`：床、`wardrobe`：衣櫃、`sofa`：沙發。可選擇多個設備，例如：option=tv,cold
+	Other     string `url:"other,omitempty"`     // 其他條件 - `cartplace`：有車位、`lift`：有電梯、`balcony_1`：有陽台、`cook`：可開伙、`pet`：可養寵物、`tragoods`：近捷運、`lease`：可短期租賃。可選擇多個條件，例如：other=cartplace,cook
 	FirstRow  int    `url:"firstRow"`
 }
 ```

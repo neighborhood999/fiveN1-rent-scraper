@@ -13,17 +13,21 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
 	if r.Method == "GET" {
-		options.Section = r.FormValue("section")
 		options.Area = r.FormValue("area")
-		options.RentPrice = r.FormValue("rentPrice")
-		options.Order = r.FormValue("order")
-		options.OrderType = r.FormValue("orderType")
-		options.FirstRow, _ = strconv.Atoi(r.FormValue("firstRow"))
-		options.Kind, _ = strconv.Atoi(r.FormValue("kind"))
-		options.HasImg = r.FormValue("hasImage")
 		options.Role = r.FormValue("role")
+		options.Other = r.FormValue("other")
+		options.Order = r.FormValue("order")
+		options.Shape = r.FormValue("shape")
+		options.Floor = r.FormValue("floor")
+		options.Option = r.FormValue("option")
+		options.HasImg = r.FormValue("hasImage")
+		options.Section = r.FormValue("section")
 		options.NotCover = r.FormValue("notCover")
+		options.RentPrice = r.FormValue("rentPrice")
+		options.OrderType = r.FormValue("orderType")
 		options.Sex, _ = strconv.Atoi(r.FormValue("sex"))
+		options.Kind, _ = strconv.Atoi(r.FormValue("kind"))
+		options.FirstRow, _ = strconv.Atoi(r.FormValue("firstRow"))
 
 		url, err := rent.GenerateURL(options)
 		if err != nil {
