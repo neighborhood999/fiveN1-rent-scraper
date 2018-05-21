@@ -40,8 +40,8 @@ type Options struct {
 	Kind      int    `url:"kind"`                // 租屋類型 - `0`：不限、`1`：整層住家、`2`：獨立套房、`3`：分租套房、`4`：雅房、`8`：車位，`24`：其他
 	RentPrice string `url:"rentprice,omitempty"` // 租金 - `2`：5k - 10k、`3`：10k - 20k、`4`: 20k - 30k；或者可以輸入價格範圍，例如：`0,10000`
 	Area      string `url:"area,omitempty"`      // 坪數格式 - `10,20`（10 到 20 坪）
-	Order     string `url:"order"`               // 貼文時間 - 預設：`posttime`
-	OrderType string `url:"ordertype"`           // 排序方式 - `desc` 或 `asc`
+	Order     string `url:"order"`               // 貼文時間 - 預設使用刊登時間：`posttime`，或是使用價格排序：`money`
+	OrderType string `url:"orderType"`           // 排序方式 - `desc` 或 `asc`
 	Sex       int    `url:"sex,omitempty"`       // 性別 - `0`：不限、`1`：男性、`2`：女性
 	HasImg    string `url:"hasimg,omitempty"`    // 過濾是否有「房屋照片」 - ``：空值（不限）、`1`：是
 	NotCover  string `url:"not_cover,omitempty"` // 過濾是否為「頂樓加蓋」 - ``：空值（不限）、`1`：是
