@@ -1,5 +1,9 @@
 # Change Log
 
+# [1.1.1](https://github.com/neighborhood999/fiveN1-rent-scraper/compare/1.0.0...1.1.0)(2018-05-22)
+### Fixes
+- 修正 `orderType` 參數 ([#36](https://github.com/neighborhood999/fiveN1-rent-scraper/pull/36))
+
 # [1.1.0](https://github.com/neighborhood999/fiveN1-rent-scraper/compare/1.0.0...1.1.0) (2018-05-17)
 ### Features
 - 新增進階搜尋功能的參數 ([#34](https://github.com/neighborhood999/fiveN1-rent-scraper/pull/34))
