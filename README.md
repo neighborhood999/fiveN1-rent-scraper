@@ -75,7 +75,7 @@ Index number is the representation **page number**, every index contain **30** i
 
 ## Options
 
-Create default options then you can generate URL:
+Create and generate URL by options:
 
 ```go
 o := rent.NewOptions()
@@ -87,7 +87,7 @@ if err != nil {
 log.Println(url)
 ```
 
-You may set more detail for your requirement, please reference `Options` struct comment:
+You may set more options for your requirement. Reference below `Options` struct comment:
 
 ```go
 type Options struct {
@@ -112,16 +112,16 @@ type Options struct {
 
 ## Multiple Page Scrape
 
-Default will scrape first page, if you want to scrape more pages, setting page amount in `Scrape` method:
+If you want to get more rent pieces of information, setting page amount in `Scrape` method:
 
 ```go
 f := rent.NewFiveN1(url)
-f.Scrape(5) // scrape page 1-5
+f.Scrape(5) // Page 1-5
 ```
 
-If page amount `> 1`, it will start goroutine automatically for scrape to correspond to page number.
+When amount `> 1`, it will start goroutine automatically and correspond to the page number to scrape.
 
-### `urlJumpIp` Code List
+## `urlJumpIp` Code List
 
 | Area   | Code |
 | :----- | :--- |
@@ -148,9 +148,9 @@ If page amount `> 1`, it will start goroutine automatically for scrape to corres
 | 金門縣 | 25   |
 | 連江縣 | 26   |
 
-### Secion Code List
+## Secion Code List
 
-More section code list please reference [Section Code List](./docs/section-code-list.md).
+More section code list reference to: [Section Code List](./docs/section-code-list.md).
 
 ## LICENSE
 
