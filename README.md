@@ -137,8 +137,8 @@ When amount `> 1`, it will start goroutine automatically and correspond to the p
 
 ## Code List
 
-- [URL Jump ID Code List（地區列表）](./docs/url-jump-id-code-list.md)
-- [Secion Code List（鄉鎮列表）](./docs/section-code-list.md)
+- [URL Jump ID Code List（地區列表）](./code-list/url-jump-id-code-list.md)
+- [Secion Code List（鄉鎮列表）](./code-list/section-code-list.md)
 
 ## LICENSE
 
