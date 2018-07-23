@@ -1,4 +1,4 @@
-## `urlJumpIp` Code List
+## `urlJumpIp` Code List（各縣市地區代號）
 
 | Area   | Code |
 | :----- | :--- |
