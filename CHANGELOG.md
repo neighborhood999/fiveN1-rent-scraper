@@ -3,7 +3,7 @@
 # [1.2.0](https://github.com/neighborhood999/fiveN1-rent-scraper/compare/1.1.1...1.2.0)(2018-07-23)
 ### Features
 - 新增 `pattern` 和 `patternMore` **格局**選項
-- **各縣市地區代號** 移至 [code-list](https://github.com/neighborhood999/fiveN1-rent-scraper/tree/master/code-list)
+- **各縣市地區代號** 移至 [list](https://github.com/neighborhood999/fiveN1-rent-scraper/tree/master/list)
 
 # [1.1.1](https://github.com/neighborhood999/fiveN1-rent-scraper/compare/1.1.0...1.1.1)(2018-05-22)
 ### Fixes
