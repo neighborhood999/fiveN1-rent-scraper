@@ -1,8 +1,8 @@
 # fiveN1 Rent Scraper
 
 ![logo](./logo/fiveN1-rent-scraper-logo.png)
-[![godoc](https://camo.githubusercontent.com/5771fd8cd24b1f8c34b82f152587dbce2294d9e1/68747470733a2f2f676f646f632e6f72672f6769746875622e636f6d2f746a2f6e6f64652d7072756e653f7374617475732e737667)](https://godoc.org/github.com/neighborhood999/fiveN1-rent-scraper)
-[![Build Status](https://img.shields.io/travis/neighborhood999/fiveN1-rent-scraper.svg?style=flat-square)](https://travis-ci.org/neighborhood999/fiveN1-rent-scraper)
+[![godoc](https://flat.badgen.net/badge/godoc/reference/4f6ba3)](https://godoc.org/github.com/neighborhood999/fiveN1-rent-scraper)
+[![Build Status](https://flat.badgen.net/travis/neighborhood999/fiveN1-rent-scraper)](https://travis-ci.org/neighborhood999/fiveN1-rent-scraper)
 [![Go Report Card](https://goreportcard.com/badge/github.com/neighborhood999/fiveN1-rent-scraper)](https://goreportcard.com/report/github.com/neighborhood999/fiveN1-rent-scraper)
 
 > a.k.a 591 rent scraper.
@@ -137,8 +137,8 @@ When amount `> 1`, it will start goroutine automatically and correspond to the p
 
 ## Code List
 
-- [URL Jump ID Code List（地區列表）](./code-list/url-jump-ip-code-list.md)
-- [Secion Code List（鄉鎮列表）](./code-list/section-code-list.md)
+- [URL Jump ID Code List（地區列表）](./list/url-jump-ip.md)
+- [Secion Code List（鄉鎮列表）](./list/section.md)
 
 ## LICENSE
 
