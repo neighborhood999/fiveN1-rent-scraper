@@ -29,7 +29,7 @@ $ go get github.com/neighborhood999/fiveN1-rent-scraper
 import (
 	"log"
 
-	"github.com/neighborhood999/fiveN1-rent-scraper"
+	rent "github.com/neighborhood999/fiveN1-rent-scraper"
 )
 
 func main() {
@@ -137,8 +137,8 @@ When amount `> 1`, it will start goroutine automatically and correspond to the p
 
 ## Code List
 
-- [URL Jump ID Code List（地區列表）](./list/url-jump-ip.md)
-- [Secion Code List（鄉鎮列表）](./list/section.md)
+- [地區列表](./list/url-jump-ip.md)
+- [鄉鎮列表](./list/section.md)
 
 ## LICENSE
 

@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/neighborhood999/fiveN1-rent-scraper"
+	rent "github.com/neighborhood999/fiveN1-rent-scraper"
 )
 
 func main() {
