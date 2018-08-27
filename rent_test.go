@@ -83,3 +83,15 @@ func TestScrape(t *testing.T) {
 	err := f.Scrape(13)
 	assert.EqualError(t, err, noMorePageErrMessage)
 }
+
+func TestConcurrentScrape(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(callbackHandler))
+	defer server.Close()
+	mockURL := server.URL + "/?"
+
+	f := NewFiveN1(mockURL)
+	f.Scrape(2)
+
+	assert.IsType(t, HouseInfoCollection{}, f.RentList)
+	assert.Equal(t, 2, len(f.RentList))
+}

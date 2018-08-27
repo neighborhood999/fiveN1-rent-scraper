@@ -1,10 +1,9 @@
 language: go
 
 go:
-  - "1.8"
   - "1.9"
   - "1.10"
-  # - tip
+  - tip
 
 cache:
   directories:
@@ -17,4 +16,7 @@ install:
   - dep ensure -v -vendor-only
 
 script:
-  - make test
+  - make coverage
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

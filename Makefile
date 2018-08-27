@@ -10,6 +10,10 @@ all: test
 test:
 	$(GOTEST) -v
 
+.PHONY: coverage
+coverage:
+	$(GOTEST) -race -coverprofile=coverage.txt -covermode=atomic
+
 .PHONY: run
 run:
 	$(GORUN) ./_example/basic/main.go
