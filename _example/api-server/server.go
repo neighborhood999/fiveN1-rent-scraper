@@ -42,7 +42,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		json := rent.ConvertToJSON(f.RentList)
 
-		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Credentials", "true")
 		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
