@@ -95,3 +95,15 @@ func TestConcurrentScrape(t *testing.T) {
 	assert.IsType(t, HouseInfoCollection{}, f.RentList)
 	assert.Equal(t, 2, len(f.RentList))
 }
+
+func TestGetTotalPage(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(callbackHandler))
+	defer server.Close()
+	mockURL := server.URL
+
+	f := NewFiveN1(mockURL)
+	totalPages := f.GetTotalPage()
+
+	assert.NotNil(t, totalPages)
+	assert.NotEqual(t, 0, totalPages)
+}
