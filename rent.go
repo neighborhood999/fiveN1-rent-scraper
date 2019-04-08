@@ -309,3 +309,10 @@ func (f *FiveN1) Scrape(page int) error {
 
 	return nil
 }
+
+// GetTotalPage can use Get total page
+func (f *FiveN1) GetTotalPage() int {
+	f.firstPage()
+
+	return f.pages
+}
