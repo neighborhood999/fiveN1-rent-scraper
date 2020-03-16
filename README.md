@@ -9,18 +9,10 @@
 
 Easy scraping [591](https://rent.591.com.tw/) rent information.
 
-## Requirement
-
-```shell
-$ go get -u github.com/vinta/pangu
-$ go get -u github.com/PuerkitoBio/goquery
-$ go get -u github.com/google/go-querystring/query
-```
-
 ## Installation
 
 ```shell
-$ go get github.com/neighborhood999/fiveN1-rent-scraper
+$ make install
 ```
 
 ## Usage
