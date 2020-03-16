@@ -1,34 +1,32 @@
-GOCMD=go
-GOTEST=$(GOCMD) test
-GOGET=$(GOCMD) get
-GORUN=$(GOCMD) run
-GOCLEAN=$(GOCMD) clean
+GO ?= go
+
+GREEN_COLOR = \x1b[32;01m
+END_COLOR = \x1b[0m
 
 all: test
 
 .PHONY: test
 test:
-	$(GOTEST) -v
+	@$(GO) test -v
 
 .PHONY: coverage
 coverage:
-	$(GOTEST) -race -coverprofile=coverage.txt -covermode=atomic
+	@$(GO) test -race -coverprofile=coverage.txt -covermode=atomic
 
 .PHONY: run
 run:
-	$(GORUN) ./_example/basic/main.go
+	@$(GO) run ./_example/basic/main.go
 
 .PHONY: race_detect
 race_detect:
-	$(GORUN) -race ./_example/basic/main.go
+	@$(GO) run -race ./_example/basic/main.go
 
 .PHONY: install
 install:
-	$(GOGET) github.com/PuerkitoBio/goquery
-	$(GOGET) github.com/google/go-querystring/query
-	$(GOGET) github.com/vinta/pangu
-	$(GOGET) github.com/stretchr/testify/assert
+	@echo "$(GREEN_COLOR)Installing dependencies...$(END_COLOR)"
+	@$(GO) mod download
+	@$(GO) mod verify
 
 .PHONY: clean
 clean:
-	$(GOCLEAN) -x -i ./...
+	@$(GO) clean -x -i ./...
