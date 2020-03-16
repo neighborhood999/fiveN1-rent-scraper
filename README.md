@@ -26,6 +26,8 @@ $ go get github.com/neighborhood999/fiveN1-rent-scraper
 ## Usage
 
 ```go
+package main
+
 import (
 	"log"
 
