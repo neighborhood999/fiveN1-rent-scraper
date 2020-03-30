@@ -1,7 +1,10 @@
 GO ?= go
 
-GREEN_COLOR = \x1b[32;01m
-END_COLOR = \x1b[0m
+PKG := "github.com/neighborhood999/fiveN1-rent-scraper"
+PROJECT_LIST := $(shell go list ${PKG}/...)
+
+GREEN_COLOR := \x1b[32;01m
+END_COLOR := \x1b[0m
 
 all: test
 
@@ -26,6 +29,10 @@ install:
 	@echo "$(GREEN_COLOR)Installing dependencies...$(END_COLOR)"
 	@$(GO) mod download
 	@$(GO) mod verify
+
+.PHONY: lint
+lint:
+	@golint -set_exit_status ${PROJECT_LIST}
 
 .PHONY: clean
 clean:
