@@ -2,7 +2,7 @@
 
 ![logo](./logo/fiveN1-rent-scraper-logo.png)
 [![godoc](https://flat.badgen.net/badge/godoc/reference/4f6ba3)](https://godoc.org/github.com/neighborhood999/fiveN1-rent-scraper)
-[![Build Status](https://flat.badgen.net/travis/neighborhood999/fiveN1-rent-scraper)](https://travis-ci.org/neighborhood999/fiveN1-rent-scraper)
+![CI](https://github.com/neighborhood999/fiveN1-rent-scraper/workflows/CI/badge.svg?branch=master)
 [![Go Report Card](https://goreportcard.com/badge/github.com/neighborhood999/fiveN1-rent-scraper)](https://goreportcard.com/report/github.com/neighborhood999/fiveN1-rent-scraper)
 
 > a.k.a 591 rent scraper.
