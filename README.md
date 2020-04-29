@@ -119,7 +119,7 @@ options.Role = "1"
 rent.GenerateURL(options)
 ```
 
-## Multiple Page
+## Multiple Pages
 
 If you want to get more rent pieces of information, setting page amount in `Scrape` method:
 
@@ -130,7 +130,7 @@ f.Scrape(5) // page.1 to page.5
 
 When amount `> 1`, it will start goroutine automatically and correspond to the page number to scrape.
 
-## Code List
+## Code Lists
 
 - [地區列表](./list/url-jump-ip.md)
 - [鄉鎮列表](./list/section.md)
