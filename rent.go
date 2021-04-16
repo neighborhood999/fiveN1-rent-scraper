@@ -65,14 +65,15 @@ type Document struct {
 
 // FiveN1 is the representation page information.
 type FiveN1 struct {
-	records  int
-	pages    int
-	queryURL string
-	RentList HouseInfoCollection
-	wg       sync.WaitGroup
-	rw       sync.RWMutex
-	client   *http.Client
-	cookie   *http.Cookie
+	records    int
+	pages      int
+	queryURL   string
+	isExecuted bool
+	RentList   HouseInfoCollection
+	wg         sync.WaitGroup
+	rw         sync.RWMutex
+	client     *http.Client
+	cookie     *http.Cookie
 }
 
 // NewHouseInfo create a new `HouseInfo`.
@@ -160,7 +161,7 @@ func ExportJSON(b []byte) {
 }
 
 func (d *Document) clone(res *http.Response) {
-	doc, err := goquery.NewDocumentFromResponse(res)
+	doc, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -270,6 +271,7 @@ func (f *FiveN1) firstPage() {
 	res := f.request(f.queryURL)
 	d.clone(res)
 
+	f.isExecuted = true
 	f.parseRecordsNum(d.doc) // Record pages number at first
 	log.Println("---------------------")
 	log.Printf("| Query URL:    \x1b[94;1m%v\x1b[0m |", f.queryURL)
@@ -310,9 +312,11 @@ func (f *FiveN1) Scrape(page int) error {
 	return nil
 }
 
-// GetTotalPage can use Get total page
+// GetTotalPage can use get total page
 func (f *FiveN1) GetTotalPage() int {
-	f.firstPage()
+	if !f.isExecuted {
+		f.firstPage()
+	}
 
 	return f.pages
 }
