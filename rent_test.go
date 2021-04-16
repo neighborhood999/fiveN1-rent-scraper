@@ -102,8 +102,10 @@ func TestGetTotalPage(t *testing.T) {
 	mockURL := server.URL
 
 	f := NewFiveN1(mockURL)
-	totalPages := f.GetTotalPage()
+	assert.Equal(t, 0, f.pages)
+	assert.Equal(t, false, f.isExecuted)
 
-	assert.NotNil(t, totalPages)
-	assert.NotEqual(t, 0, totalPages)
+	f.GetTotalPage()
+	assert.Equal(t, 12, f.pages)
+	assert.Equal(t, true, f.isExecuted)
 }
