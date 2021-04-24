@@ -4,7 +4,7 @@
 
 ![CI](https://github.com/neighborhood999/fiveN1-rent-scraper/workflows/CI/badge.svg?branch=master)
 [![Go Report Card](https://goreportcard.com/badge/github.com/neighborhood999/fiveN1-rent-scraper)](https://goreportcard.com/report/github.com/neighborhood999/fiveN1-rent-scraper)
-[![godoc](https://flat.badgen.net/badge/godoc/reference/4f6ba3)](https://godoc.org/github.com/neighborhood999/fiveN1-rent-scraper)
+[![GoDoc](https://pkg.go.dev/badge/github.com/neighborhood999/fiveN1-rent-scraper?utm_source=godoc)](https://godoc.org/github.com/neighborhood999/fiveN1-rent-scraper)
 
 > a.k.a 591 rent scraper.
 
