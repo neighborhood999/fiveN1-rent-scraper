@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 	"strconv"
@@ -40,7 +41,9 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		if err := f.Scrape(1); err != nil {
 			log.Fatal(err)
 		}
-		json := rent.ConvertToJSON(f.RentList)
+
+		result := f.RentList[1]
+		json, _ := json.MarshalIndent(result, "", " ")
 
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
