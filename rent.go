@@ -66,7 +66,7 @@ type Document struct {
 // FiveN1 is the representation page information.
 type FiveN1 struct {
 	records    int
-	pages      int
+	TotalPages int
 	queryURL   string
 	isExecuted bool
 	RentList   HouseInfoCollection
@@ -262,7 +262,7 @@ func (f *FiveN1) parseRecordsNum(doc *goquery.Document) {
 		replaceComman := strings.Replace(recordString, ",", "", -1)
 		totalRecord, _ := strconv.Atoi(replaceComman)
 		f.records = totalRecord
-		f.pages = (totalRecord / 30) + 1
+		f.TotalPages = (totalRecord / 30) + 1
 	})
 }
 
@@ -276,7 +276,7 @@ func (f *FiveN1) firstPage() {
 	log.Println("---------------------")
 	log.Printf("| Query URL:    \x1b[94;1m%v\x1b[0m |", f.queryURL)
 	log.Printf("| Total Record: \x1b[94;1m%d\x1b[0m |", f.records)
-	log.Printf("| Total Page:   \x1b[94;1m%d\x1b[0m  |", f.pages)
+	log.Printf("| Total Page:   \x1b[94;1m%d\x1b[0m  |", f.TotalPages)
 	log.Println("---------------------")
 	f.parseRentHouse(0, d.doc)
 }
@@ -298,7 +298,7 @@ func (f *FiveN1) worker(n int) {
 // it will start workers.
 func (f *FiveN1) Scrape(page int) error {
 	f.firstPage()
-	if page > f.pages {
+	if page > f.TotalPages {
 		return errors.New("\x1b[91;1mNo More Pages！\x1b[0m")
 	}
 
@@ -318,5 +318,5 @@ func (f *FiveN1) GetTotalPage() int {
 		f.firstPage()
 	}
 
-	return f.pages
+	return f.TotalPages
 }

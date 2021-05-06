@@ -9,6 +9,11 @@ import (
 	rent "github.com/neighborhood999/fiveN1-rent-scraper"
 )
 
+type Response struct {
+	TotalPages int               `json:"totalPages"`
+	Data       []*rent.HouseInfo `json:"data"`
+}
+
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	options := rent.NewOptions()
 	r.ParseForm()
@@ -42,8 +47,15 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			log.Fatal(err)
 		}
 
-		result := f.RentList[1]
-		json, _ := json.MarshalIndent(result, "", " ")
+		response, err := json.Marshal(Response{
+			TotalPages: f.TotalPages,
+			Data:       f.RentList[1],
+		})
+
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -51,7 +63,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token")
 
-		w.Write(json)
+		w.Write(response)
 	}
 }
 

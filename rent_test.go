@@ -77,7 +77,7 @@ func TestScrape(t *testing.T) {
 	f := NewFiveN1(mockURL)
 	f.Scrape(1)
 
-	assert.Equal(t, expectedPages, f.pages)
+	assert.Equal(t, expectedPages, f.TotalPages)
 	assert.Equal(t, expectedRecords, f.records)
 
 	err := f.Scrape(13)
@@ -102,10 +102,10 @@ func TestGetTotalPage(t *testing.T) {
 	mockURL := server.URL
 
 	f := NewFiveN1(mockURL)
-	assert.Equal(t, 0, f.pages)
+	assert.Equal(t, 0, f.TotalPages)
 	assert.Equal(t, false, f.isExecuted)
 
 	f.GetTotalPage()
-	assert.Equal(t, 12, f.pages)
+	assert.Equal(t, 12, f.TotalPages)
 	assert.Equal(t, true, f.isExecuted)
 }
