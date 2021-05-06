@@ -9,7 +9,7 @@ import (
 	rent "github.com/neighborhood999/fiveN1-rent-scraper"
 )
 
-type Response struct {
+type RentInformation struct {
 	TotalPages int               `json:"totalPages"`
 	Data       []*rent.HouseInfo `json:"data"`
 }
@@ -47,7 +47,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			log.Fatal(err)
 		}
 
-		response, err := json.Marshal(Response{
+		response, err := json.Marshal(RentInformation{
 			TotalPages: f.TotalPages,
 			Data:       f.RentList[1],
 		})
