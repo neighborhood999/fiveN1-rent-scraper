@@ -1,8 +1,12 @@
 # Change Log
 
+# [1.2.3](https://github.com/neighborhood999/fiveN1-rent-scraper/compare/1.2.1...1.2.3)(2021-05-07)
+### Chores
+- chores: export `TotalPages` vairable (#50)
+
 # [1.2.2](https://github.com/neighborhood999/fiveN1-rent-scraper/compare/1.2.1...1.2.2)(2021-04-26)
 ### Refactor
-- refactor: add isExecuted flag to avoid re-fetch (#49)
+- refactor: add `isExecuted` flag to avoid re-fetch (#49)
 
 # [1.2.0](https://github.com/neighborhood999/fiveN1-rent-scraper/compare/1.1.1...1.2.0)(2018-07-23)
 ### Features
