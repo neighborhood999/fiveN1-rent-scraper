@@ -204,7 +204,7 @@ func (f *FiveN1) parseRentHouse(page int, doc *goquery.Document) {
 			if href, ok := listInfo.Find(".pull-left.infoContent > h3 > a").Attr("href"); ok {
 				url = stringReplacer(href)
 			}
-			houseInfo.URL = "https:" + url
+			houseInfo.URL = url
 
 			if crop, ok := listInfo.Find(".pull-left.imageBox > img").Attr("data-original"); ok {
 				preview := strings.Replace(crop, "210x158.crop.jpg", "765x517.water3.jpg", 1)
