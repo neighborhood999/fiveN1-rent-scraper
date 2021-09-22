@@ -1,5 +1,9 @@
 # Change Log
 
+# [1.2.4](https://github.com/neighborhood999/fiveN1-rent-scraper/compare/v1.2.2...v1.2.4)(2021-09-22)
+
+- fixed: remove `https` prefix (#51)
+
 # [1.2.3](https://github.com/neighborhood999/fiveN1-rent-scraper/compare/v1.2.2...v1.2.3)(2021-05-07)
 ### Chores
 - chores: export `TotalPages` vairable (#50)
